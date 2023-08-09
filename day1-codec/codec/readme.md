@@ -69,3 +69,39 @@ Close 方法用于关闭连接。
 这个库的主要功能是在服务器端接受连接，并使用指定的编解码器处理请求。服务器接受请求后会调用注册的 RPC 方法来获取正确的响应，并将响应返回给客户端。
 
 请注意，这只是一个简化的代码示例，实际的使用场景可能需要更复杂的实现，例如支持多线程并发处理请求、错误处理、注册和调用远程方法等。
+
+# main.go
+这段代码是一个简单的 RPC（远程过程调用）示例，使用了来自 Geerpc 库的功能。RPC 允许在网络上的不同计算机之间进行函数调用。
+
+代码中定义了一个 `startServer` 函数，该函数启动了一个 TCP 服务器，并将其地址发送到 `addr` 通道。
+
+在 `main` 函数中，通过调用 `startServer` 函数来启动服务器。然后使用 `net.Dial` 函数连接到服务器。连接成功后，通过 JSON 编码器将 `geerpc.DefaultOption` 发送到服务器。
+
+接下来，使用 Gob 编解码器创建一个 `codec.Codec` 实例，用于在网络连接上进行读写操作。然后，通过 `cc.Write` 方法发送请求，并通过 `cc.ReadHeader` 和 `cc.ReadBody` 方法读取服务器返回的响应数据。
+
+最后，循环发送了 5 个请求，并打印出每个请求的响应数据。
+
+请注意，这只是一个简化的示例，用于展示 RPC 的基本概念和使用 Geerpc 库的方法。
+
+# 相关知识点
+make 和 new 的区别
+Go语言中 new 和 make 是两个内置函数，主要用来创建并分配类型的内存。在我们定义变量的时候，可能会觉得有点迷惑，不知道应该使用哪个函数来声明变量，其实他们的规则很简单，new 只分配内存，而 make 只能用于 slice、map 和 channel 的初始化，下面我们就来具体介绍一下。
+
+# go map
+在声明的时候不需要知道 map 的长度，map 是可以动态增长的。
+
+未初始化的 map 的值是 nil。
+
+key 可以是任意可以用 == 或者 != 操作符比较的类型，比如 string、int、float。所以数组、切片和结构体不能作为 key (译者注：含有数组切片的结构体不能作为 key，只包含内建类型的 struct 是可以作为 key 的），但是指针和接口类型可以。如果要用结构体作为 key 可以提供 Key() 和 Hash() 方法，这样可以通过结构体的域计算出唯一的数字或者字符串的 key
+
+# go接口
+https://go.timpaik.top/08.1.html#_8-1-1-%E6%A6%82%E5%BF%B5
+
+# go defer()的用法和使用场景
+https://tiancaiamao.gitbooks.io/go-internals/content/zh/03.4.html
+https://blog.csdn.net/Cassie_zkq/article/details/108567205
+
+工厂模式
+https://www.runoob.com/design-pattern/factory-pattern.html
+
+# go并发
