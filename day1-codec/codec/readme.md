@@ -105,3 +105,39 @@ https://blog.csdn.net/Cassie_zkq/article/details/108567205
 https://www.runoob.com/design-pattern/factory-pattern.html
 
 # go并发
+
+# go Buffer
+在 Go 语言中，`buf.Flush()` 是一种用于刷新缓冲区的方法。它通常用于刷新写入缓冲区但尚未写入底层数据源（例如文件或网络连接）的数据。当你使用缓冲读写时，数据可能首先被写入缓冲区，然后在达到一定条件时再被刷新到底层数据源。
+
+具体而言，`buf.Flush()` 会将缓冲区中的数据写入到底层数据源，并清空缓冲区。这样可以确保之前写入缓冲区的数据被立即发送或持久化。比如，在使用 `bufio.Writer` 这个包提供的缓冲写入功能时，你可以使用 `Flush()` 方法来确保所有的数据都被写入并刷新到底层的输出流。
+
+以下是一个简单的示例代码，演示了如何使用 `bufio.Writer` 和 `Flush()` 方法来刷新缓冲区：
+
+```go
+package main
+
+import (
+	"bufio"
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.Create("example.txt")
+	if err != nil {
+		fmt.Println("创建文件失败：", err)
+		return
+	}
+	defer file.Close()
+
+	writer := bufio.NewWriter(file)
+	writer.WriteString("Hello, World!\n")
+	writer.Flush() // 将缓冲区中的数据写入文件
+
+	fmt.Println("数据已写入文件")
+}
+```
+
+在上面的示例中，我们首先创建了一个文件并创建了一个 `bufio.Writer` 对象来包装该文件。然后我们调用 `writer.WriteString()` 将数据写入缓冲区，然后使用 `writer.Flush()` 将缓冲区中的数据刷新到文件中。最后，我们关闭文件以确保所有数据都已写入。
+
+请注意，`Flush()` 方法并不总是必需的。当你关闭文件或程序运行结束时，缓冲区通常会自动被刷新。但是，有时你可能希望手动刷新缓冲区，以确保数据实时地写入底层数据源，而不是等待缓冲区满或程序结束时才刷新。
